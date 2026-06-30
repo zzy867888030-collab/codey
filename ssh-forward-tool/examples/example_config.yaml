@@ -1,0 +1,71 @@
+# SSH端口转发工具 - 配置示例
+
+# 堡垒机配置（必填）
+bastion:
+  user: "your_username"
+  host: "bastion.yourcompany.com"
+  port: 22
+
+# 跳板机配置。工具会通过堡垒机登录到跳板机，再在跳板机执行 nc 连接目标端口。
+jump_host:
+  user: "mnyjy"
+  host: "192.168.77.39"
+  port: 22
+
+# 常用目标配置
+targets:
+  dev_server:
+    name: "开发服务器"
+    ip: "192.168.77.38"
+    port: 22
+    local_port: 2222
+    description: "开发环境SSH访问"
+
+  test_server:
+    name: "测试服务器"
+    ip: "192.168.77.45"
+    port: 22
+    local_port: 2223
+    description: "测试环境SSH访问"
+
+  mysql_server:
+    name: "MySQL数据库"
+    ip: "192.168.77.39"
+    port: 3306
+    local_port: 3307
+    description: "MySQL数据库访问"
+
+  custom_12345:
+    name: "12345服务"
+    ip: "192.168.77.39"
+    port: 12345
+    local_port: 12345
+    description: "自定义端口访问"
+
+  redis_server:
+    name: "Redis缓存"
+    ip: "192.168.77.39"
+    port: 6379
+    local_port: 6380
+    description: "Redis缓存访问"
+
+  web_server:
+    name: "Web服务"
+    ip: "192.168.77.100"
+    port: 80
+    local_port: 8080
+    description: "内网Web服务"
+
+  kibana:
+    name: "Kibana日志"
+    ip: "192.168.77.101"
+    port: 5601
+    local_port: 5601
+    description: "ELK日志查询"
+
+# 高级配置
+advanced:
+  timeout: 20                         # 连接超时（秒）
+  bind_host: "127.0.0.1"            # 默认只监听本机
+  strict_host_key_checking: "accept-new"
+  check_interval: 5                  # 会话状态轮询间隔（秒）

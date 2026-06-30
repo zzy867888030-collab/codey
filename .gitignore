@@ -1,0 +1,57 @@
+# ===== OS / editor junk =====
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# ===== Build artifacts / caches =====
+target/
+build/
+dist/
+out/
+bin/
+node_modules/
+.gradle/
+__pycache__/
+*.pyc
+*.class
+
+# ===== Large binaries (exceed GitHub limits / not source) =====
+*.dmg
+*.tar.gz
+*.tgz
+*.zip
+*.jar
+*.jmod
+*.jsa
+*.dylib
+*.so
+*.app/
+*.ipa
+
+# ===== JDK / downloaded toolchains =====
+my_dbeaver/tools/jdk/
+my_dbeaver/tools/downloads/
+my_dbeaver/tools/m2repo/
+my_dbeaver/tools/m2-repo/
+my_dbeaver/tools/maven/
+my_dbeaver/tools/DBeaver-MFA.app/
+
+# ===== Mobile app payload (binary) =====
+梦幻花园_9.7.0/Payload/
+梦幻花园_9.7.0/iTunesArtwork
+
+# ===== Nested git repos (push separately via their own remotes) =====
+seatunnel/
+dolphinscheduler/
+my_dbeaver/dbeaver-src/
+my_dbeaver/dbeaver-common/
+my_dbeaver/tools/dbeaver-common/
+
+# ===== Secrets / runtime logs (do NOT publish) =====
+*.log
+db_web_query/config.json
+ssh-forward-tool/config.yaml
+my_dbeaver/tools/dbeaver-mfa-workspace/General/.dbeaver/credentials-config.json
+my_dbeaver/tools/dbeaver-mfa-workspace/General/.dbeaver/.credentials-config.json.bak
+my_dbeaver/tools/dbeaver-mfa-workspace/General/.dbeaver/.data-sources.json.bak

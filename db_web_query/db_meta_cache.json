@@ -1,0 +1,98 @@
+{
+    "cache_key": "doris|192.168.77.38|9030|root",
+    "updated_at": "2026-06-16 10:53:26",
+    "db_list": [
+        "MIHDB_DICT",
+        "MIHDB_ODS",
+        "MNDJK",
+        "__internal_schema",
+        "demo",
+        "information_schema",
+        "mysql"
+    ],
+    "tables": {
+        "MIHDB_DICT": [
+            "dict_branch_final"
+        ],
+        "MIHDB_ODS": [
+            "check_info_2025_Encry",
+            "check_info_all",
+            "check_info_new_2024_Encry",
+            "check_info_new_2024_Encry01",
+            "checkup_ans_2025_encry",
+            "checkup_visit_2025_Encry",
+            "ext_mnyjy_peis_result",
+            "mnyjy_peis_result",
+            "peis_chekup_ans_2024_Encry",
+            "result_2025",
+            "result_new2024_Encry01"
+        ],
+        "MNDJK": [
+            "阶段C_极简实验数据需求"
+        ],
+        "__internal_schema": [
+            "audit_log",
+            "column_statistics",
+            "partition_statistics"
+        ],
+        "demo": [
+            "t1"
+        ],
+        "information_schema": [
+            "active_queries",
+            "backend_active_tasks",
+            "backend_configuration",
+            "backend_kerberos_ticket_cache",
+            "backend_tablets",
+            "blackhole",
+            "catalog_meta_cache_statistics",
+            "character_sets",
+            "cluster_snapshot_properties",
+            "cluster_snapshots",
+            "collations",
+            "column_data_sizes",
+            "column_privileges",
+            "column_statistics",
+            "columns",
+            "encryption_keys",
+            "engines",
+            "events",
+            "file_cache_statistics",
+            "files",
+            "global_variables",
+            "key_column_usage",
+            "load_jobs",
+            "metadata_name_ids",
+            "parameters",
+            "partitions",
+            "processlist",
+            "profiling",
+            "referential_constraints",
+            "routine_load_jobs",
+            "routines",
+            "rowsets",
+            "schema_privileges",
+            "schemata",
+            "session_variables",
+            "sql_block_rule_status",
+            "statistics",
+            "table_constraints",
+            "table_options",
+            "table_privileges",
+            "table_properties",
+            "tables",
+            "triggers",
+            "user_privileges",
+            "view_dependency",
+            "views",
+            "workload_group_privileges",
+            "workload_group_resource_usage",
+            "workload_groups",
+            "workload_policy"
+        ],
+        "mysql": [
+            "procs_priv",
+            "user"
+        ]
+    }
+}

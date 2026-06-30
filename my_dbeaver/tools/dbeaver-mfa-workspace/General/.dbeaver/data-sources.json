@@ -1,0 +1,56 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-dbeaver-mfa-bastion-test": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "MySQL MFA Internal SSH",
+			"save-password": false,
+			"configuration": {
+				"host": "192.168.77.39",
+				"port": "3306",
+				"url": "jdbc:mysql://192.168.77.39:3306/",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": false,
+				"provider-properties": {
+					"@dbeaver-show-all-dbs@": "true"
+				},
+				"auth-model": "native",
+				"handlers": {
+					"ssh_tunnel": {
+						"type": "TUNNEL",
+						"enabled": true,
+						"save-password": false,
+						"user": "mnyjy",
+						"properties": {
+							"host": "192.168.77.38",
+							"port": 22,
+							"authType": "PASSWORD",
+							"implementation": "jsch",
+							"sshConnectTimeout": 20000,
+							"aliveInterval": 0,
+							"jumpServer.count": 1,
+							"jumpServer0.enabled": true,
+							"jumpServer0.name": "zhangzhiyu",
+							"jumpServer0.host": "192.168.31.88",
+							"jumpServer0.port": 60022,
+							"jumpServer0.authType": "PASSWORD"
+						}
+					}
+				}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false
+		}
+	}
+}

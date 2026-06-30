@@ -1,0 +1,10 @@
+# SSH端口转发工具依赖
+# 核心依赖
+pyyaml>=6.0
+pexpect>=4.9.0
+rumps>=0.4.0
+py2app>=0.28.8
+
+# 可选增强依赖（按需安装）
+# paramiko>=3.4.0  # 如改用纯Python SSH客户端
+# keyring>=24.3.0  # 系统密钥环存储密码
