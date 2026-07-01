@@ -1350,3 +1350,15 @@ Git 提交：
 未验证项：
 - 本地无法连内网 Doris(192.168.77.38:9030 超时), 未当场执行建表;
   语法顺序与分区列类型已对齐 v3 已验证约定。
+
+实测验证 (2026-07-01)：
+- 连接路径: SSH 隧道 mnyjy@127.0.0.1:3911 -> 内网 Doris
+  192.168.77.38:9030 (root, --skip-password, DB=MIHDB_DWD)。
+- scp/ssh 需强制密码认证: -o PreferredAuthentications=password
+  -o PubkeyAuthentication=no (默认走 publickey 会被拒)。
+- 执行 dwd_fact_lab_v2.sql: EXIT_CODE=0, 建表零报错。
+- SHOW CREATE TABLE 确认: 25 字段齐全, AUTO PARTITION BY
+  RANGE(date_trunc(lab_date,'month')) 生效, UNIQUE KEY(lab_result_id,
+  lab_date), 6 个倒排索引全部挂上; 两个全文索引 Doris 自动补齐
+  lower_case/support_phrase 属性。
+- 结论: mismatched input 'COMMENT' 报错已彻底解决并线上验证通过。
