@@ -1362,3 +1362,38 @@ Git 提交：
   lab_date), 6 个倒排索引全部挂上; 两个全文索引 Doris 自动补齐
   lower_case/support_phrase 属性。
 - 结论: mismatched input 'COMMENT' 报错已彻底解决并线上验证通过。
+
+
+### 2026-07-01 重建 dim_lab_item 并导入标化字典 (源自 表结构设计V1.2)
+
+目标：
+- 依据《DWD_体检数据仓库表结构设计_V1.2》sheet「维度表_检验项目」重建
+  MIHDB_DWD.dim_lab_item, 并导入 Excel 全量数据。
+
+交付文件：
+- `2.DDL脚本/dim_lab_item.sql` (建表, 14 字段 + 3 倒排索引)
+- `4.ETL脚本/dim_lab_item_data.sql` (数据导入, 40 批 INSERT)
+- 同步更新 `2.DDL脚本/MIHDB_DWD.sql` 内旧的 dim_lab_item 定义
+
+结构变更 (旧 7 字段 -> 新 14 字段)：
+- 旧表是「类别/类型」结构; 新文档是「原始词→标化词」映射字典。
+- Excel 12 列: raw_item_name / raw_item_detail_name / raw_specimen_name /
+  lab_level1_category / lab_level2_category / standard_name /
+  item_detail_code / lab_level1_code / lab_level2_code /
+  related_diseases / related_disease_systems / is_effective。
+- 主键: item_detail_code 是标化编码(877 唯一值, 一码多写法), 不能做主键;
+  改用 mapping_id = MD5(原始大项|原始细项|原始标本)。
+
+数据处理：
+- Excel 19860 数据行, 按原始三元组去重掉 2 行完全重复(HPV 小结), 得 19858 行。
+- is_effective 全为 0(有效); raw_item_name 无空值。
+- 引号转义: 5'-核苷酸酶 -> 5\'-核苷酸酶; 空串/None 一律写 NULL。
+
+线上验证 (SSH 隧道 -> 192.168.77.38:9030, DDL_EXIT=0, DATA_EXIT=0)：
+- COUNT(*) = 19858, DISTINCT mapping_id = 19858 (主键无冲突)。
+- DISTINCT item_detail_code = 877 (与分析一致)。
+- is_effective 全 0; raw_item_name null=0; 抽样映射正确。
+
+经验教训：
+- 大批量 INSERT 用 Python 生成分批(500/批)文件, 避免超长单条与引号转义坑。
+- INSERT 前 SET enable_insert_strict=false, 容忍个别宽松值。

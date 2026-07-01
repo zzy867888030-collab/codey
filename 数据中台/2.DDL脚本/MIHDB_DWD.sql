@@ -483,24 +483,32 @@ PROPERTIES (
 );
 
 
--- ----- 维度表_检验项目: dim_lab_item -----
+-- ----- 维度表_检验项目: dim_lab_item (原始词->标化词映射, 见 2.DDL脚本/dim_lab_item.sql) -----
 DROP TABLE IF EXISTS `MIHDB_DWD`.`dim_lab_item`;
 CREATE TABLE `MIHDB_DWD`.`dim_lab_item` (
-  `lab_item_code` VARCHAR(64) NOT NULL COMMENT '检验项目代码',
-  `lab_category_code` VARCHAR(64) NULL COMMENT '检验类别代码',
-  `lab_category_name` VARCHAR(200) NULL COMMENT '检验类别名称',
-  `lab_type_code` VARCHAR(64) NULL COMMENT '检验类型代码',
-  `lab_type_name` VARCHAR(200) NULL COMMENT '检验类型名称',
-  `lab_item_name` VARCHAR(200) NULL COMMENT '检验项目名称',
-  `is_effective` VARCHAR(1) NULL COMMENT '是否有效'
+  `mapping_id` VARCHAR(32) NOT NULL COMMENT '映射主键, MD5(原始三元组)',
+  `raw_item_name` VARCHAR(128) NOT NULL COMMENT '原始大项名称',
+  `raw_item_detail_name` VARCHAR(128) NULL COMMENT '原始细项名称',
+  `raw_specimen_name` VARCHAR(32) NULL COMMENT '原始标本名称',
+  `lab_level1_category` VARCHAR(64) NULL COMMENT '一级分类',
+  `lab_level2_category` VARCHAR(64) NULL COMMENT '二级分类',
+  `standard_name` VARCHAR(128) NULL COMMENT '归一标化名称',
+  `item_detail_code` VARCHAR(32) NULL COMMENT '细项标化编码',
+  `lab_level1_code` VARCHAR(16) NULL COMMENT '一级分类编码',
+  `lab_level2_code` VARCHAR(32) NULL COMMENT '二级分类编码',
+  `related_diseases` VARCHAR(256) NULL COMMENT '主要相关疾病',
+  `related_disease_systems` VARCHAR(128) NULL COMMENT '疾病系统',
+  `is_effective` VARCHAR(1) NULL DEFAULT '0' COMMENT '是否有效: 0有效/1无效',
+  `etl_load_time` DATETIME NOT NULL COMMENT 'ETL加载时间'
 ) ENGINE=OLAP
-UNIQUE KEY(`lab_item_code`)
-COMMENT 'dim_lab_item · 检验项目字典（以下数据为示例数据，需根据标准进行完善）'
-DISTRIBUTED BY HASH(`lab_item_code`) BUCKETS 4
+UNIQUE KEY(`mapping_id`)
+COMMENT 'dim_lab_item · 检验项目字典（原始词→标化词映射, 源自表结构设计V1.2）'
+DISTRIBUTED BY HASH(`mapping_id`) BUCKETS 8
 PROPERTIES (
   "replication_num" = "2",
   "enable_unique_key_merge_on_write" = "true",
-  "compression" = "ZSTD"
+  "compression" = "ZSTD",
+  "light_schema_change" = "true"
 );
 
 
