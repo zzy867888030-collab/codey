@@ -1317,3 +1317,36 @@ Git 提交：
 Git 提交：
 - `21b56bb` (上一版 13 索引)
 - 本次提交将覆盖为优化版
+
+
+### 2026-07-01 dwd_fact_lab 建表报错修复 (COMMENT顺序 + 分区列类型)
+
+报错：
+- `errCode = 2, mismatched input 'COMMENT' expecting {<EOF>, ';'}(line 30)`
+
+根因 (两层)：
+1. 子句顺序错误: 上一版为 `UNIQUE KEY -> PARTITION BY -> COMMENT`,
+   Doris 要求 COMMENT(表注释) 必须在 PARTITION BY 之前。
+2. 隐藏坑: `PARTITION BY RANGE` 分区列不能是 VARCHAR(7), 必须 DATE/DATETIME;
+   且普通 dynamic_partition 不会为 2017-2025 历史数据自动建分区, 回填会失败。
+
+修复方案：
+- 参考已验证的 dwd_fact_lab_v3.sql (分区列用 DATE)。
+- 改用 lab_date(DATE) 做 `AUTO PARTITION BY RANGE(date_trunc(lab_date,'month'))()`,
+  按数据自动建月分区, 永不过期, 历史回填不缺分区。
+- lab_date 提到第 2 列, UNIQUE KEY = (lab_result_id, lab_date) (Unique 模型
+  分区列必须是 key 列, key 列必须前置)。
+- report_month 保留为 VARCHAR(7) 普通列 + idx_report_month 倒排索引, 供分月统计。
+- 正确子句顺序: UNIQUE KEY -> COMMENT -> AUTO PARTITION -> DISTRIBUTED -> PROPERTIES。
+
+经验教训 (记入坑位)：
+- Doris CREATE TABLE 子句顺序固定: 列定义 -> ENGINE -> UNIQUE/DUP KEY ->
+  COMMENT -> PARTITION -> DISTRIBUTED -> PROPERTIES。COMMENT 放错位置即报
+  mismatched input 'COMMENT'。
+- RANGE/动态分区列必须 DATE/DATETIME, 不能 VARCHAR。
+- 需导入任意历史区间数据时用 AUTO PARTITION, 而非 dynamic_partition(后者只建
+  当前时间附近的未来分区)。
+
+未验证项：
+- 本地无法连内网 Doris(192.168.77.38:9030 超时), 未当场执行建表;
+  语法顺序与分区列类型已对齐 v3 已验证约定。
