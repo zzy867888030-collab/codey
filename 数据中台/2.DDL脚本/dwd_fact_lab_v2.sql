@@ -55,12 +55,20 @@ PROPERTIES (
 );
 
 -- =============================================================
--- 倒排索引 (按 dwd_fact_checkin 索引组合裁剪)
+-- 倒排索引
+-- 高频查询: 某指标阳性/异常/值范围统计
 -- =============================================================
 ALTER TABLE `MIHDB_DWD`.`dwd_fact_lab`
-  ADD INDEX idx_checkin_id     (`checkin_id`)      USING INVERTED COMMENT '体检流水号倒排索引',
-  ADD INDEX idx_person_id      (`person_id`)       USING INVERTED COMMENT '人员唯一标识倒排索引',
-  ADD INDEX idx_lab_date       (`lab_date`)        USING INVERTED COMMENT '检验日期倒排索引',
-  ADD INDEX idx_report_month   (`report_month`)    USING INVERTED COMMENT '月份倒排索引, 分月扫描',
-  ADD INDEX idx_positive_level (`positive_level`)  USING INVERTED COMMENT '异常级别倒排索引, 阳性率统计',
-  ADD INDEX idx_lab_item_code  (`lab_item_code`)   USING INVERTED COMMENT '细项编码倒排索引, 按指标筛选';
+  ADD INDEX idx_checkin_id         (`checkin_id`)           USING INVERTED COMMENT '体检流水号',
+  ADD INDEX idx_person_id          (`person_id`)            USING INVERTED COMMENT '人员唯一标识',
+  ADD INDEX idx_lab_date           (`lab_date`)             USING INVERTED COMMENT '检验日期',
+  ADD INDEX idx_report_month       (`report_month`)         USING INVERTED COMMENT '月份分区, 分月扫描',
+  ADD INDEX idx_lab_item_code      (`lab_item_code`)        USING INVERTED COMMENT '细项编码, 按指标筛选',
+  ADD INDEX idx_lab_type_name      (`lab_type_name`)        USING INVERTED COMMENT '检项名称, 按大类统计',
+  ADD INDEX idx_lab_item_name      (`lab_item_name`)        USING INVERTED COMMENT '细项名称, 按指标统计',
+  ADD INDEX idx_short_name         (`short_name`)           USING INVERTED COMMENT '细项简称, 快捷检索',
+  ADD INDEX idx_result_value       (`result_value`)         USING INVERTED COMMENT '结果值, 值范围过滤',
+  ADD INDEX idx_result_flag        (`result_flag`)          USING INVERTED COMMENT '阳性标识, H/L/阳性筛选',
+  ADD INDEX idx_positive_level     (`positive_level`)       USING INVERTED COMMENT '异常级别, 阳性率统计',
+  ADD INDEX idx_abnormal_name      (`abnormal_name`)        USING INVERTED COMMENT '异常描述, 异常归类',
+  ADD INDEX idx_diagnosis_conclusion(`diagnosis_conclusion`) USING INVERTED COMMENT '诊断结论, 疾病归类';
