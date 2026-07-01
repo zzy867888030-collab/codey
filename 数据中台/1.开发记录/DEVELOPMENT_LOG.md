@@ -1295,3 +1295,25 @@ Git 提交：
 - `positive_level` 是字典码，永远是 VARCHAR，不能用 TINYINT。
 - `ref_low`/`ref_high` 源数据含非数值，DWD 层保留 VARCHAR，数值转换放到 DWS/ADS。
 - apply_patch 在此环境多次失败，用 heredoc (`cat > file <<'EOF'`) 替代。
+
+
+### 2026-07-01 dwd_fact_lab 表结构深度优化 (分区 + 索引精简)
+
+依据表结构评估意见，完成三项核心优化：
+
+**P0 新增分区**：
+- 新增 `PARTITION BY RANGE(report_month)()` 按月范围分区
+- 开启动态分区: 保留 36 个月历史 + 预创建 3 个月未来分区
+- 收益: 按月查询直接分区裁剪，性能提升 1~2 个数量级
+
+**P1 索引精简 (13→4 核心 + 2 全文)**：
+- 保留: `idx_person_id`, `idx_checkin_id`, `idx_lab_item_code`, `idx_lab_date`
+- 删除: `idx_report_month`(改分区), `idx_lab_type_name/idx_lab_item_name/idx_short_name`(冗余), `idx_result_value`(高基数长字符串), `idx_result_flag`(极低基数), `idx_positive_level`(5个取值)
+- `idx_abnormal_name`/`idx_diagnosis_conclusion` 从普通倒排改为 `PARSER unicode` 全文索引
+
+**P3 细节修正**：
+- `is_valid` DEFAULT `'1'` → `1`, 类型统一
+
+Git 提交：
+- `21b56bb` (上一版 13 索引)
+- 本次提交将覆盖为优化版
