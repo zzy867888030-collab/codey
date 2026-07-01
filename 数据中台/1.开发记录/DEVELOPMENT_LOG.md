@@ -1261,3 +1261,37 @@ ALTER TABLE MIHDB_ODS.result_new2024_Encry01_new RENAME result_new2024_Encry01;
 验证结果：
 - 两个 SQL 文件均包含 `AUTO_INCREMENT`、`DUPLICATE KEY(id)`、124 条 INSERT、校验 SQL、注释换表 SQL。
 - 未生成 `.sh` 迁移脚本。
+
+
+### 2026-07-01 dwd_fact_lab 表结构补全 (24→25 字段)
+
+目标：
+- 根据业务需求补齐 `dwd_fact_lab` 缺少的字段，从 v1 的 17 字段升级到 v2 的 25 字段。
+
+交付文件：
+- `2.DDL脚本/dwd_fact_lab_v2.sql` (66行)
+
+新增字段（共 8 个）：
+- `lab_type_name` VARCHAR(200) — 检项名称
+- `lab_item_name` VARCHAR(200) — 细项名称
+- `short_name` VARCHAR(100) — 细项简称（2026-07-01 追加）
+- `ref_low` VARCHAR(50) — 参考下界（VARCHAR 非 DECIMAL，因源数据含非数值如 `>5.0`、`阴性`）
+- `ref_high` VARCHAR(50) — 参考上界
+- `result_flag` VARCHAR(20) — 阳性标识
+- `abnormal_name` VARCHAR(200) — 异常描述
+- `table_source` VARCHAR(50) — 数据来源
+
+关键修正：
+- `positive_level` 从 TINYINT 改为 VARCHAR(2) DEFAULT '99'，字典码 01/02/03/04/99 不应丢前导零。
+
+倒排索引（6 个）：
+- `idx_checkin_id`、`idx_person_id`、`idx_lab_date`、`idx_report_month`、`idx_positive_level`、`idx_lab_item_code`
+
+Git 提交：
+- `9d7b205` dwd_fact_lab: 补全24字段DDL
+- `44d8731` dwd_fact_lab: 新增 short_name 细项简称字段, 25字段版
+
+经验教训：
+- `positive_level` 是字典码，永远是 VARCHAR，不能用 TINYINT。
+- `ref_low`/`ref_high` 源数据含非数值，DWD 层保留 VARCHAR，数值转换放到 DWS/ADS。
+- apply_patch 在此环境多次失败，用 heredoc (`cat > file <<'EOF'`) 替代。
