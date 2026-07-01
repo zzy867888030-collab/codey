@@ -52,13 +52,7 @@ PROPERTIES (
   "enable_single_replica_compaction" = "false",
   "group_commit_interval_ms" = "10000",
   "group_commit_data_bytes" = "134217728",
-  "enable_mow_light_delete" = "false",
-  "dynamic_partition.enable" = "true",
-  "dynamic_partition.time_unit" = "MONTH",
-  "dynamic_partition.start" = "-36",
-  "dynamic_partition.end" = "3",
-  "dynamic_partition.prefix" = "p",
-  "dynamic_partition.buckets" = "32"
+  "enable_mow_light_delete" = "false"
 );
 
 -- =============================================================
