@@ -1,7 +1,7 @@
 -- =============================================================
 -- 文件: dwd_fact_lab_v2.sql
--- 用途: DWD层 实验室检验结果事实表 (补全 24 字段版)
---       在 v1 基础上补齐: lab_type_name, lab_item_name, ref_low,
+-- 用途: DWD层 实验室检验结果事实表 (补全 25 字段版)
+--       在 v1 基础上补齐: lab_type_name, lab_item_name, short_name, ref_low,
 --       ref_high, result_flag, abnormal_name, table_source
 -- 修正: positive_level TINYINT -> VARCHAR(2), 字典码 01/02/99 不应丢前导零
 -- 日期: 2026-07-01
@@ -17,6 +17,7 @@ CREATE TABLE `MIHDB_DWD`.`dwd_fact_lab` (
   `lab_type_name`        VARCHAR(200)  NULL     COMMENT '检项名称',
   `lab_item_code`        VARCHAR(100)  NULL     COMMENT '细项编码',
   `lab_item_name`        VARCHAR(200)  NULL     COMMENT '细项名称',
+  `short_name`           VARCHAR(100)  NULL     COMMENT '细项简称',
   `result_value`         VARCHAR(500)  NULL     COMMENT '检验结果值',
   `result_category`      VARCHAR(50)   NULL     COMMENT '检验结果值类型',
   `unit`                 VARCHAR(50)   NULL     COMMENT '结果单位',
